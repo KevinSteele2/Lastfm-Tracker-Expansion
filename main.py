@@ -7,7 +7,7 @@ load_dotenv("lastfm/.env")
 
 API_KEY = os.getenv("API_KEY")
 API_SECRET = os.getenv("API_SECRET")
-USERNAME = "Donaldddddd"
+USERNAME = "xoforever69"
 
 def test_user_info():
     url = "http://ws.audioscrobbler.com/2.0/"
@@ -45,6 +45,90 @@ def test_recent_tracks():
         print(f"    Date: {track['date']['#text']}")
     return response.json()
 
+def get_all_scrobbles():
+    url = "http://ws.audioscrobbler.com/2.0/"
+    all_tracks = []
+    page=1
+    while True:
+        params = {
+            "method": "user.getrecenttracks",
+            "user": USERNAME,
+            "api_key": API_KEY,
+            "limit": 200,
+            "page": page,
+            "format": "json"
+        }
+
+        response = requests.get(url, params=params)
+        data = response.json()
+        tracks = data.get("recenttracks", {}).get("track", [])
+        if not isinstance(tracks, list):
+            tracks = [tracks]
+        
+        all_tracks.extend(tracks)
+
+        total_pages = int(data.get("recenttracks", {}).get("@attr", {}).get("totalPages", 1))
+        print(f"Fetched page {page} of {total_pages}")
+        if page >= total_pages:
+            break
+        page += 1
+    return all_tracks
+
+def group_by_album(tracks):
+    albums = {}
+    for track in tracks:
+        album_name = track.get("album", {})
+        if isinstance(album_name, dict):
+            album_name = album_name.get("#text", "Unknown")
+        
+        artist_name = track.get("artist", {})
+        if isinstance(artist_name, dict):
+            artist_name = artist_name.get("#text", "Unknown")
+        
+        album_key = f"{album_name} - {artist_name}"
+
+        if album_key not in albums:
+            albums[album_key] = {
+                "tracks": [],
+                "artist": artist_name,
+                "album": album_name,
+                "cover_art": None
+            }
+        
+        albums[album_key]["tracks"].append(track)
+
+    #fetching cover art
+    for album_key, album_data in albums.items():
+        cover_art = get_album_cover(album_data["album"], album_data["artist"])
+        album_data["cover_art"] = cover_art
+
+    return albums
+
+def get_album_cover(album_name, artist_name):
+    url="http://ws.audioscrobbler.com/2.0/"
+    params = {
+        "method": "album.getinfo",
+        "artist": artist_name,
+        "album": album_name,
+        "api_key": API_KEY,
+        "format": "json"
+    }
+
+    response = requests.get(url, params=params)
+    data = response.json()
+    images = data.get("album", {}).get("image", [])
+    if images:
+        return images[-1].get("#text", None)
+
+    return None
+
+
 if __name__ == "__main__":
-    test_user_info()
-    test_recent_tracks()
+    #test_user_info()
+    #test_recent_tracks()
+    tracks = get_all_scrobbles()
+    albums = group_by_album(tracks)
+    print(f"{len(albums)} distinct album/artist combinations")
+
+    for key, info in list(albums.items())[:5]:
+        print(key, ">", len(info["tracks"]), "scrobbles")
