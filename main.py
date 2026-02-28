@@ -122,13 +122,37 @@ def get_album_cover(album_name, artist_name):
 
     return None
 
+def album_track_count(album_name, artist_name):
+    url="http://ws.audioscrobbler.com/2.0/"
+    params = {
+        "method": "album.getinfo",
+        "artist": artist_name,
+        "album": album_name,
+        "api_key": API_KEY,
+        "format": "json"
+    }
+    response = requests.get(url, params=params)
+    data = response.json()
+    tracks = data.get("album", {}).get("tracks", {}).get("track", [])
+    if isinstance(tracks, dict):
+        return 1
+    return len(tracks)
+
+def full_listen_albums(albums):
+    result = {}
+    for key, info in albums.items():
+        seen = {t.get("name", "").strip() for t in info["tracks"]}
+        total = album_track_count(info["album"], info["artist"])
+        if total and len(seen) >= total:
+            result[key] = info
+    return result
 
 if __name__ == "__main__":
     #test_user_info()
     #test_recent_tracks()
     tracks = get_all_scrobbles()
     albums = group_by_album(tracks)
-    print(f"{len(albums)} distinct album/artist combinations")
-
-    for key, info in list(albums.items())[:5]:
-        print(key, ">", len(info["tracks"]), "scrobbles")
+    full = full_listen_albums(albums)
+    print(f"{len(full)} albums have been listend to in full")
+    for key in full:
+        print(key)
