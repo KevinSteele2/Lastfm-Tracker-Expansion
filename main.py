@@ -2,6 +2,7 @@
 import requests
 from dotenv import load_dotenv
 import os
+import json
 
 load_dotenv("lastfm/.env")
 
@@ -168,10 +169,54 @@ def album_play_counts(albums, track_counts):
         counts[key] = count_full_plays(info["tracks"], total)
     return counts
 
+def load_track_count_cache(username):
+    try:
+        with open(f"track_counts_{username}.json", "r") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+def save_track_count_cache(username, cache):
+    with open(f"track_counts_{username}.json", "w") as f:
+        json.dump(cache, f)
+
 if __name__ == "__main__":
     #test_user_info()
     #test_recent_tracks()
     tracks = get_all_scrobbles()
     albums = group_by_album(tracks)
-    full = full_listen_albums(albums)
+
+    cache = load_track_count_cache(USERNAME)
+    for key, info in albums.items():
+        if key not in cache:
+            cache[key] = album_track_count(info["album"], info["artist"])
+            print(f"Fetched: {key}")
+    save_track_count_cache(USERNAME, cache)
+    track_counts = cache
+
+    play_counts = album_play_counts(albums, track_counts)
+
+    results = {}
+    for key, count in play_counts.items():
+        if count > 0:
+            results[key] = count
+    
+    album_list = []
+    for key, count in results.items():
+        album_list.append((key, count))
+
+    #sorting
+    for i in range(len(album_list)):
+        for j in range(i + 1, len(album_list)):
+            if album_list[j][1] > album_list[i][1]:
+                album_list[i], album_list[j] = album_list[j], album_list[i]
+    
+    top_10 = album_list[:10]
+
+    print(f"\nTop Ten Most Listened Albums:")
+    print("-" * 60)
+    rank = 1
+    for album_key, count in top_10:
+        print(f"{rank}. {album_key}: {count} complete listens")
+        rank += 1
     
