@@ -3,6 +3,7 @@ import requests
 from dotenv import load_dotenv
 import os
 import json
+import time
 
 load_dotenv("lastfm/.env")
 
@@ -62,6 +63,11 @@ def get_all_scrobbles():
 
         response = requests.get(url, params=params)
         data = response.json()
+
+        if "error" in data:
+            print(f"API Error on page {page}: {data['error']}")
+            break
+
         tracks = data.get("recenttracks", {}).get("track", [])
         if not isinstance(tracks, list):
             tracks = [tracks]
@@ -73,6 +79,7 @@ def get_all_scrobbles():
         if page >= total_pages:
             break
         page += 1
+        time.sleep(.2)
     return all_tracks
 
 def group_by_album(tracks):
