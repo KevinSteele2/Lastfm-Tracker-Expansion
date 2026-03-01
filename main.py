@@ -98,9 +98,9 @@ def group_by_album(tracks):
         albums[album_key]["tracks"].append(track)
 
     #fetching cover art
-    for album_key, album_data in albums.items():
-        cover_art = get_album_cover(album_data["album"], album_data["artist"])
-        album_data["cover_art"] = cover_art
+    #for album_key, album_data in albums.items():
+        #cover_art = get_album_cover(album_data["album"], album_data["artist"])
+        #album_data["cover_art"] = cover_art
 
     return albums
 
@@ -147,12 +147,31 @@ def full_listen_albums(albums):
             result[key] = info
     return result
 
+def count_full_plays(album_tracks, total_tracks):
+    track_counts = {}
+    for t in album_tracks:
+        name = t.get("name", "").strip()
+        if name:
+            track_counts[name] = track_counts.get(name, 0) + 1
+    
+    if len(track_counts) < total_tracks:
+        return 0
+    
+    return min(track_counts.values())
+
+def album_play_counts(albums, track_counts):
+    counts = {}
+    for key, info in albums.items():
+        total = track_counts.get(key, 0)
+        if total <= 0:
+            continue
+        counts[key] = count_full_plays(info["tracks"], total)
+    return counts
+
 if __name__ == "__main__":
     #test_user_info()
     #test_recent_tracks()
     tracks = get_all_scrobbles()
     albums = group_by_album(tracks)
     full = full_listen_albums(albums)
-    print(f"{len(full)} albums have been listend to in full")
-    for key in full:
-        print(key)
+    
