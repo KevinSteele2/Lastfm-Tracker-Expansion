@@ -1,3 +1,6 @@
+const container = document.getElementById('albums-container');
+container.innerHTML = '<div class="loading">Loading albums...</div>'
+
 fetch('/api/albums')
     .then(response => response.json())
     .then(data => {
@@ -8,7 +11,7 @@ fetch('/api/albums')
             return;
         }
 
-        const container = document.getElementById('albums-container');
+        container.innerHTML = '';
 
         for (let i = 0; i < data.length; i++){
             const album = data[i];
@@ -27,4 +30,5 @@ fetch('/api/albums')
     })
     .catch(error => {
         console.error('Error fetching albums:', error);
+        container.innerHTML = '<div class="loading">Error loading albums</div>';
     });

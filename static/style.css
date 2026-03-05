@@ -1,0 +1,12 @@
+body {
+    background-image: url('/static/wood.png');
+    background-size: cover;
+    background-attachment: fixed;
+    color: white;
+}
+
+.loading {
+    text-align: center;
+    font-size: 24px;
+    padding: 50px;
+}

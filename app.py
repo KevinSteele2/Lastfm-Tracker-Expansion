@@ -38,7 +38,7 @@ def get_albums():
             if album_list[j]["count"] > album_list[i]["count"]:
                 album_list[i], album_list[j] = album_list[j], album_list[i]
     
-    return jsonify(album_list[:10])
+    return jsonify(album_list[:100]) # Possibly change this to be without the slice index so that just everything returns. Why not.
 
 if __name__ == '__main__':
     app.run(debug=True)
