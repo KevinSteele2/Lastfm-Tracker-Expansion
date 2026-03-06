@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 import os
 import json
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 load_dotenv("lastfm/.env")
 
@@ -105,13 +106,29 @@ def group_by_album(tracks):
         
         albums[album_key]["tracks"].append(track)
 
-    #fetching cover art
-    #for album_key, album_data in albums.items():
-        #cover_art = get_album_cover(album_data["album"], album_data["artist"])
-        #album_data["cover_art"] = cover_art
-
     return albums
 
+def get_album_info(album_name, artist_name):
+    url = "http://ws.audioscrobbler.com/2.0/"
+    params = {
+        "method": "album.getinfo",
+        "artist": artist_name,
+        "album": album_name,
+        "api_key": API_KEY,
+        "format": "json"
+    }
+    response = requests.get(url, params=params)
+    data = response.json().get("album", {})
+
+    tracks = data.get("tracks", {}).get("track", [])
+    track_count = 1 if isinstance(tracks, dict) else len(tracks)
+
+    images = data.get("image", [])
+    cover = images[-1].get("#text") if images else None
+
+    return {"track_count": track_count, "cover": cover}
+
+#Obsolete
 def get_album_cover(album_name, artist_name):
     url="http://ws.audioscrobbler.com/2.0/"
     params = {
@@ -130,6 +147,7 @@ def get_album_cover(album_name, artist_name):
 
     return None
 
+#Obsolete
 def album_track_count(album_name, artist_name):
     url="http://ws.audioscrobbler.com/2.0/"
     params = {
@@ -170,12 +188,37 @@ def count_full_plays(album_tracks, total_tracks):
 def album_play_counts(albums, track_counts):
     counts = {}
     for key, info in albums.items():
-        total = track_counts.get(key, 0)
+        total = track_counts.get(key, {}).get("track_count", 0)
         if total <= 0:
             continue
         counts[key] = count_full_plays(info["tracks"], total)
     return counts
 
+def load_cache(username):
+    try:
+        with open(f"cache_{username}.json", "r") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+def save_cache(username, cache):
+    with open(f"cache_{username}.json", "w") as f:
+        json.dump(cache, f)
+
+def fetch_missing_albums(albums, cache):
+    missing = [key for key in albums if key not in cache]
+
+    def fetch_one(key):
+        info = albums[key]
+        result = get_album_info(info["album"], info["artist"])
+        print(f"Fetched: {key}")
+        return key, result
+
+    with ThreadPoolExecutor(max_workers=10) as executor:
+        for key, result in executor.map(fetch_one, missing):
+            cache[key] = result
+
+#Everything below is obsolete
 def load_track_count_cache(username):
     try:
         with open(f"track_counts_{username}.json", "r") as f:
@@ -185,6 +228,17 @@ def load_track_count_cache(username):
 
 def save_track_count_cache(username, cache):
     with open(f"track_counts_{username}.json", "w") as f:
+        json.dump(cache, f)
+
+def load_cover_cache(username):
+    try:
+        with open(f"cover_cache_{username}.json", "r") as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {}
+
+def save_cover_cache(username, cache):
+    with open(f"cover_cache_{username}.json", "w") as f:
         json.dump(cache, f)
 
 if __name__ == "__main__":

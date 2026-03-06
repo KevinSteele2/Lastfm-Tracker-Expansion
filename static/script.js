@@ -23,8 +23,16 @@ fetch('/api/albums')
             // Making album card
             const card = document.createElement('div');
             card.className = 'album-card';
-            card.textContent = albumName + ' - ' + artist +  ': ' + count + ' listens';
+            
+            const img = document.createElement('img');
+            img.src = album.cover || '';
+            img.alt = albumName;
 
+            const label = document.createElement('p');
+            label.textContent = albumName + ' - ' + artist + ': ' + count + ' listens';
+
+            card.appendChild(img)
+            card.appendChild(label);
             container.appendChild(card);
         }
     })
