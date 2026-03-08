@@ -128,51 +128,6 @@ def get_album_info(album_name, artist_name):
 
     return {"track_count": track_count, "cover": cover}
 
-#Obsolete
-def get_album_cover(album_name, artist_name):
-    url="http://ws.audioscrobbler.com/2.0/"
-    params = {
-        "method": "album.getinfo",
-        "artist": artist_name,
-        "album": album_name,
-        "api_key": API_KEY,
-        "format": "json"
-    }
-
-    response = requests.get(url, params=params)
-    data = response.json()
-    images = data.get("album", {}).get("image", [])
-    if images:
-        return images[-1].get("#text", None)
-
-    return None
-
-#Obsolete
-def album_track_count(album_name, artist_name):
-    url="http://ws.audioscrobbler.com/2.0/"
-    params = {
-        "method": "album.getinfo",
-        "artist": artist_name,
-        "album": album_name,
-        "api_key": API_KEY,
-        "format": "json"
-    }
-    response = requests.get(url, params=params)
-    data = response.json()
-    tracks = data.get("album", {}).get("tracks", {}).get("track", [])
-    if isinstance(tracks, dict):
-        return 1
-    return len(tracks)
-
-def full_listen_albums(albums):
-    result = {}
-    for key, info in albums.items():
-        seen = {t.get("name", "").strip() for t in info["tracks"]}
-        total = album_track_count(info["album"], info["artist"])
-        if total and len(seen) >= total:
-            result[key] = info
-    return result
-
 def count_full_plays(album_tracks, total_tracks):
     track_counts = {}
     for t in album_tracks:
@@ -217,29 +172,6 @@ def fetch_missing_albums(albums, cache):
     with ThreadPoolExecutor(max_workers=10) as executor:
         for key, result in executor.map(fetch_one, missing):
             cache[key] = result
-
-#Everything below is obsolete
-def load_track_count_cache(username):
-    try:
-        with open(f"track_counts_{username}.json", "r") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return {}
-
-def save_track_count_cache(username, cache):
-    with open(f"track_counts_{username}.json", "w") as f:
-        json.dump(cache, f)
-
-def load_cover_cache(username):
-    try:
-        with open(f"cover_cache_{username}.json", "r") as f:
-            return json.load(f)
-    except FileNotFoundError:
-        return {}
-
-def save_cover_cache(username, cache):
-    with open(f"cover_cache_{username}.json", "w") as f:
-        json.dump(cache, f)
 
 if __name__ == "__main__":
     #test_user_info()
