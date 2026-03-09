@@ -1,42 +1,45 @@
-const container = document.getElementById('albums-container');
-container.innerHTML = '<div class="loading">Loading albums...</div>'
+function loadAlbums(){
+    const username = document.getElementById('username-input').value;
+    const container = document.getElementById('albums-container');
+    container.innerHTML = '<div class="loading">Loading albums...</div>'
+    fetch(`/api/albums?username=${username}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Data received:', data);
 
-fetch('/api/albums')
-    .then(response => response.json())
-    .then(data => {
-        console.log('Data received:', data);
+            if(!data || data.length === 0){
+                console.log('No data received');
+                return;
+            }
 
-        if(!data || data.length === 0){
-            console.log('No data received');
-            return;
-        }
+            container.innerHTML = '';
 
-        container.innerHTML = '';
+            for (let i = 0; i < data.length; i++){
+                const album = data[i];
+                const parts = album.name.split(' - ');
+                const albumName =  parts[0];
+                const artist = parts[1];
+                const count = album.count;
 
-        for (let i = 0; i < data.length; i++){
-            const album = data[i];
-            const parts = album.name.split(' - ');
-            const albumName =  parts[0];
-            const artist = parts[1];
-            const count = album.count;
+                // Making album card
+                const card = document.createElement('div');
+                card.className = 'album-card';
+                
+                const img = document.createElement('img');
+                img.src = album.cover || '';
+                img.alt = albumName;
 
-            // Making album card
-            const card = document.createElement('div');
-            card.className = 'album-card';
-            
-            const img = document.createElement('img');
-            img.src = album.cover || '';
-            img.alt = albumName;
+                const label = document.createElement('p');
+                label.textContent = albumName + ' - ' + artist + ': ' + count + ' listens';
 
-            const label = document.createElement('p');
-            label.textContent = albumName + ' - ' + artist + ': ' + count + ' listens';
+                card.appendChild(img)
+                card.appendChild(label);
+                container.appendChild(card);
+            }
+        })
 
-            card.appendChild(img)
-            card.appendChild(label);
-            container.appendChild(card);
-        }
-    })
-    .catch(error => {
-        console.error('Error fetching albums:', error);
-        container.innerHTML = '<div class="loading">Error loading albums</div>';
-    });
+        .catch(error => {
+            console.error('Error fetching albums:', error);
+            container.innerHTML = '<div class="loading">Error loading albums</div>';
+        });
+}

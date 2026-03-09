@@ -1,7 +1,7 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 import sys
 sys.path.append('.')
-from main import get_all_scrobbles, group_by_album, album_play_counts, load_cache, save_cache, fetch_missing_albums, USERNAME
+from main import get_all_scrobbles, group_by_album, album_play_counts, load_cache, save_cache, fetch_missing_albums
 
 app = Flask(__name__)
 
@@ -11,14 +11,17 @@ def index():
 
 @app.route('/api/albums')
 def get_albums():
-    tracks = get_all_scrobbles()
+    username = request.args.get('username')
+    if not username:
+        return jsonify({"error": "Invalid Username"}), 400
+    tracks = get_all_scrobbles(username)
     albums = group_by_album(tracks)
-    cache = load_cache(USERNAME)
+    cache = load_cache(username)
     fetch_missing_albums(albums, cache)
-    save_cache(USERNAME, cache)
+    save_cache(username, cache)
     play_counts = album_play_counts(albums, cache)
     album_list = []
-    
+
     for key, count in play_counts.items():
         if count > 0:
             album_list.append({

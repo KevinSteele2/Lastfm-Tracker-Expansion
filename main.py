@@ -48,14 +48,14 @@ def test_recent_tracks():
         print(f"    Date: {track['date']['#text']}")
     return response.json()
 
-def get_all_scrobbles():
+def get_all_scrobbles(username):
     url = "http://ws.audioscrobbler.com/2.0/"
     all_tracks = []
     page=1
     while True:
         params = {
             "method": "user.getrecenttracks",
-            "user": USERNAME,
+            "user": username,
             "api_key": API_KEY,
             "limit": 200,
             "page": page,
