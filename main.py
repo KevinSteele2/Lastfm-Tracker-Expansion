@@ -129,6 +129,8 @@ def get_album_info(album_name, artist_name):
     return {"track_count": track_count, "cover": cover}
 
 def count_full_plays(album_tracks, total_tracks):
+    if total_tracks <= 1:
+        return 0
     track_counts = {}
     for t in album_tracks:
         name = t.get("name", "").strip()
