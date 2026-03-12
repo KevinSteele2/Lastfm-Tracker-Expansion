@@ -56,3 +56,9 @@ function loadAlbums(){
             container.innerHTML = '<div class="loading">Error loading albums</div>';
         });
 }
+
+document.getElementById('username-input').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter'){
+        loadAlbums();
+    }
+});

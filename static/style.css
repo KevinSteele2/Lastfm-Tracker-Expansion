@@ -1,5 +1,5 @@
 body {
-    background-image: url('/static/wood.png');
+    background-image: url('\\static\\photo-1632199495802-18f7d21f323b.jpg');
     background-size: cover;
     background-attachment: fixed;
     color: white;
@@ -9,6 +9,7 @@ body {
     text-align: center;
     font-size: 24px;
     padding: 50px;
+    text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
 }
 
 .album-card img {
@@ -22,7 +23,7 @@ body {
 }
 
 .border-blue {
-    box-shadow: 0 0 6px 2px white, 0 0 20px 8px blue, 0 0 40px 16px blue;
+    box-shadow: 0 0 6px 2px white, 0 0 20px 8px rgb(0, 132, 255), 0 0 40px 16px rgb(0, 132, 255);
 }
 
 .border-gold {
@@ -31,4 +32,13 @@ body {
 
 .border-silver {
     box-shadow: 0 0 6px 2px white, 0 0 20px 8px silver, 0 0 40px 16px silver;
+}
+
+#albums-container{
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.album-card p {
+    text-shadow: -1px -1px 0 black, 1px -1px 0  black, -1px 1px 0 black, 1px 1px 0 black;
 }
