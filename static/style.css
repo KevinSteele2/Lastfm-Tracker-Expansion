@@ -16,3 +16,19 @@ body {
     height: 150px;
     object-fit: cover;
 }
+
+.border-purple {
+    box-shadow: 0 0 6px 2px white, 0 0 20px 8px purple, 0 0 40px 16px purple;
+}
+
+.border-blue {
+    box-shadow: 0 0 6px 2px white, 0 0 20px 8px blue, 0 0 40px 16px blue;
+}
+
+.border-gold {
+    box-shadow: 0 0 6px 2px white, 0 0 20px 8px goldenrod, 0 0 40px 16px goldenrod;
+}
+
+.border-silver {
+    box-shadow: 0 0 6px 2px white, 0 0 20px 8px silver, 0 0 40px 16px silver;
+}

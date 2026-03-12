@@ -29,6 +29,19 @@ function loadAlbums(){
                 img.src = album.cover || '';
                 img.alt = albumName;
 
+                if(count >= 30){
+                    img.classList.add('border-purple');
+                }
+                else if (count >= 20){
+                    img.classList.add('border-blue');
+                }
+                else if (count >= 10){
+                    img.classList.add('border-gold');
+                }
+                else if (count >= 5){
+                    img.classList.add('border-silver');
+                }
+
                 const label = document.createElement('p');
                 label.textContent = albumName + ' - ' + artist + ': ' + count + ' listens';
 
