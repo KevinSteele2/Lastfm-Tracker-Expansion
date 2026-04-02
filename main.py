@@ -73,6 +73,8 @@ def get_all_scrobbles(username):
         if not isinstance(tracks, list):
             tracks = [tracks]
         
+        tracks = [t for t in tracks if not t.get("@attr", {}).get("nowplaying")]
+        
         all_tracks.extend(tracks)
 
         total_pages = int(data.get("recenttracks", {}).get("@attr", {}).get("totalPages", 1))
