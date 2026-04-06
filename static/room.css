@@ -1,0 +1,24 @@
+#room {
+    transform-style: preserve-3d;
+    transition: transform 1s ease;
+}
+.wall { position: absolute; width: 100vw; height: 100vh }
+#wall-front  { transform: translateZ(500px); }
+#wall-right  { transform: rotateY(-90deg) translateZ(500px); }
+#wall-back  { transform: rotateY(180deg) translateZ(500px); }
+#wall-left  { transform: rotateY(90deg) translateZ(500px); }
+
+button.turn-btn {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1000;
+}
+
+button.turn-btn.left {
+    left: 20px;
+}
+
+button.turn-btn.right {
+    right: 20px;
+}
