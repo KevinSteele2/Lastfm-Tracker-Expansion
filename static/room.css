@@ -1,18 +1,45 @@
+body {
+    background-color: black;
+    perspective: 1000px;
+    perspective-origin: 50% 50%;
+    overflow: hidden;
+}
+
 #room {
     transform-style: preserve-3d;
     transition: transform 1s ease;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
 }
-.wall { position: absolute; width: 100vw; height: 100vh }
+.wall { position: absolute; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
 #wall-front  { transform: translateZ(500px); }
 #wall-right  { transform: rotateY(-90deg) translateZ(500px); }
 #wall-back  { transform: rotateY(180deg) translateZ(500px); }
 #wall-left  { transform: rotateY(90deg) translateZ(500px); }
+
+.door{
+    color: white;
+    font-size: 32px;
+    text-decoration: none;
+    border: 2px solid white;
+    padding: 20px 40px;
+}
+
+.door:hover {
+    background-color: rgba(255,255,255,0,1);
+}
 
 button.turn-btn {
     position: fixed;
     top: 50%;
     transform: translateY(-50%);
     z-index: 1000;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
 }
 
 button.turn-btn.left {

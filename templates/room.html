@@ -2,26 +2,22 @@
 <head>
     <title>My Site</title>
     <link rel="stylesheet" href="/static/room.css">
-    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 <div id="room">
     <div class="wall" id="wall-front">
-        <input type="text" id="username-input" placeholder="Enter last.fm username">
-        <button onclick="loadAlbums()">Search</button>
-
-        <div id="albums-container">
-            <div class = "loading">Enter a last.fm username to get started</div>
-        </div>
+        <a href="/lastfm" class="door">Last.fm</a>
     </div>
-    <div class="wall" id="wall-right"></div>
-    <div class="wall" id="wall-back"></div>
-    <div class="wall" id="wall-left"></div>
+    <div class="wall" id="wall-right">
+    </div>
+    <div class="wall" id="wall-back">
+    </div>
+    <div class="wall" id="wall-left">
+    </div>
 </div>
 <button class="turn-btn right" onclick="turn(1)">&gt;</button>
 <button class="turn-btn left" onclick="turn(-1)">&lt;</button>
 
 <script src="/static/room.js"></script>
-<script src="/static/script.js"></script>
 </body>
 </html>
