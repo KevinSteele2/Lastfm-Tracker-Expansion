@@ -9,6 +9,7 @@ body {
     text-align: center;
     font-size: 32px;
     padding: 50px;
+    color: #e6c9f7;
     text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
     font-family: 'Helvetica', sans-serif;
 }
@@ -45,7 +46,7 @@ body {
 }
 
 .back-btn {
-    color: white;
+    color: #e6c9f7;
     text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
     font-size: 15px;
     text-decoration: none;
