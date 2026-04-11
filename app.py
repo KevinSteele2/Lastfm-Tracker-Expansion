@@ -6,6 +6,10 @@ from main import get_all_scrobbles, group_by_album, album_play_counts, load_cach
 
 app = Flask(__name__)
 
+@app.route('/')
+def index():
+    return render_template('room.html')
+
 @app.route('/lastfm')
 def index():
     return render_template('lastfm.html')
