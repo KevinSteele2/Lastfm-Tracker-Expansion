@@ -7,7 +7,7 @@ body {
 
 .loading {
     text-align: center;
-    font-size: 24px;
+    font-size: 32px;
     padding: 50px;
     text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
 }
@@ -41,4 +41,17 @@ body {
 
 .album-card p {
     text-shadow: -1px -1px 0 black, 1px -1px 0  black, -1px 1px 0 black, 1px 1px 0 black;
+}
+
+.back-btn {
+    color: white;
+    text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+    font-size: 15px;
+    text-decoration: none;
+}
+
+.search-bar {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 }
