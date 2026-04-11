@@ -10,6 +10,7 @@ body {
     font-size: 32px;
     padding: 50px;
     text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+    font-family: 'Helvetica', sans-serif;
 }
 
 .album-card img {

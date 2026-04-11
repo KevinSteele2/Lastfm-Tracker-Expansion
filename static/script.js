@@ -1,7 +1,7 @@
 function loadAlbums(){
     const username = document.getElementById('username-input').value;
     const container = document.getElementById('albums-container');
-    container.innerHTML = '<div class="loading">Loading albums...</div>'
+    container.innerHTML = '<div class="loading">loading albums...</div>'
     fetch(`/api/albums?username=${username}`)
         .then(response => response.json())
         .then(data => {
