@@ -11,7 +11,7 @@ def index():
     return render_template('room.html')
 
 @app.route('/lastfm')
-def index():
+def lastfm():
     return render_template('lastfm.html')
 
 @app.route('/api/albums')
