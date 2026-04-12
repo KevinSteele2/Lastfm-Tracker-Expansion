@@ -1,8 +1,8 @@
 body {
-    background-image: url('\\static\\concrete.jpg');
-    background-size: cover;
-    background-attachment: fixed;
-    color: white;
+    perspective: 500px;
+    perspective-origin: 50% 50%;
+    overflow: hidden;
+    margin: 0;
 }
 
 #room {
@@ -12,18 +12,29 @@ body {
     height: 100vh;
     position: relative;
 }
-.wall { position: absolute; width: 100vw; height: 100vh; display: flex; align-items: center; justify-content: center; }
-#wall-front  { transform: translateZ(500px); }
-#wall-right  { transform: rotateY(-90deg) translateZ(500px); }
-#wall-back  { transform: rotateY(180deg) translateZ(500px); }
-#wall-left  { transform: rotateY(90deg) translateZ(500px); }
+.wall { position: absolute; width: 100vw; height: 100vh; display: flex; align-items: center;
+    justify-content: center; 
+    background-image: url('/static/concrete.jpg');
+    background-size: cover;
+    transform-style: preserve-3d;
+    pointer-events: none;
+}
+#wall-front { transform: rotateY(0deg) translateZ(-500px); }
+#wall-right  { transform: rotateY(90deg) translateZ(-500px); }
+#wall-back   { transform: rotateY(180deg) translateZ(-500px); }
+#wall-left   { transform: rotateY(-90deg) translateZ(-500px); }
 
-.door{
+.door {
     color: white;
     font-size: 32px;
     text-decoration: none;
     border: 2px solid white;
     padding: 20px 40px;
+    display: block;
+    pointer-events: all;
+    position: relative;
+    cursor: pointer;
+    transform: rotateY(180deg);
 }
 
 .door:hover {
