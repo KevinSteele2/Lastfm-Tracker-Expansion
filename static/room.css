@@ -11,6 +11,7 @@ body {
     width: 100vw;
     height: 100vh;
     position: relative;
+    pointer-events: none;
 }
 .wall { position: absolute; width: 100vw; height: 100vh; display: flex; align-items: center;
     justify-content: center; 
@@ -18,8 +19,21 @@ body {
     background-size: cover;
     transform-style: preserve-3d;
     pointer-events: none;
+    backface-visibility: visible;
 }
-#wall-front { transform: rotateY(0deg) translateZ(-500px); }
+
+.wall.active{
+    pointer-events: all;
+}
+
+.wall.active .door{
+    pointer-events: all;
+}
+
+#wall-front { 
+    transform: rotateY(0deg) translateZ(-500px);
+    backface-visibility: visible;
+}
 #wall-right  { transform: rotateY(90deg) translateZ(-500px); }
 #wall-back   { transform: rotateY(180deg) translateZ(-500px); }
 #wall-left   { transform: rotateY(-90deg) translateZ(-500px); }
@@ -34,7 +48,6 @@ body {
     pointer-events: all;
     position: relative;
     cursor: pointer;
-    transform: rotateY(180deg);
 }
 
 .door:hover {
