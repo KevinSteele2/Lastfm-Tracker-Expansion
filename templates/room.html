@@ -1,28 +1,32 @@
+<!DOCTYPE html>
 <html>
 <head>
     <title>My Site</title>
     <link rel="stylesheet" href="/static/room.css">
 </head>
 <body>
-<div id="room">
-    <div class="wall" id="wall-front">
-        <a href="/lastfm" class="door">Last.fm Album Tracker</a>
+<div id="scene">
+    <div id="room">
+        <div class="wall" id="wall-front">
+            <a href="/lastfm" class="door">Last.fm Album Tracker</a>
+        </div>
+        <div class="wall" id="wall-right">
+            <a class="door">About Me (wip)</a>
+        </div>
+        <div class="wall" id="wall-back">
+            <a class="door">Wall3</a>
+        </div>
+        <div class="wall" id="wall-left">
+            <a class="door">Wall4</a>
+        </div>
+        <div id="floor"></div>
+        <div id="ceiling"></div>
     </div>
-    <div class="wall" id="wall-right">
-        <a class="door">About Me (wip)</a>
-    </div>
-    <div class="wall" id="wall-back">
-        <a class="door">Wall3</a>
-    </div>
-    <div class="wall" id="wall-left">
-        <a class="door">Wall4</a>
-    </div>
-    <div id="floor"></div>
-    <div id="ceiling"></div>
 </div>
-<button class="turn-btn right" onclick="turn(1)">&gt;</button>
-<button class="turn-btn left" onclick="turn(-1)">&lt;</button>
-
+<div id="ui">
+    <button class="turn-btn left" onclick="turn(-1)">&lt;</button>
+    <button class="turn-btn right" onclick="turn(1)">&gt;</button>
+</div>
 <script src="/static/room.js"></script>
 </body>
 </html>
