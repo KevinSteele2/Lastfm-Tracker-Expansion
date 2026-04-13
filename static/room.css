@@ -13,7 +13,7 @@ body {
     position: relative;
     pointer-events: none;
 }
-.wall { position: absolute; width: 100vw; height: 100vh; display: flex; align-items: center;
+.wall { position: absolute; width: 100vw; height: 150vh; top: -25vh; display: flex; align-items: center;
     justify-content: center; 
     background-image: url('/static/concrete.jpg');
     background-size: cover;
@@ -72,4 +72,22 @@ button.turn-btn.left {
 
 button.turn-btn.right {
     right: 20px;
+}
+
+#floor {
+    position: absolute;
+    width: 100vw;
+    height: 100vw;
+    background-image: url('/static/concrete.jpg');
+    background-size: cover;
+    transform: rotateX(90deg) translateZ(-500px);
+}
+
+#ceiling {
+    position: absolute;
+    width: 100vw;
+    height: 100vw;
+    background-image: url('/static/concrete.jpg');
+    background-size: cover;
+    transform: rotateX(-90deg) translateZ(-500px);
 }
