@@ -12,7 +12,7 @@ body {
 }
 
 #scene {
-    perspective: 50vmin;
+    perspective: var(--room-size);
     perspective-origin: 50% 50%;
     overflow: hidden;
     width: 100vw;
@@ -50,11 +50,7 @@ body {
     pointer-events: all;
 }
 
-.wall.active .door {
-    pointer-events: all;
-}
-
-#wall-front { transform: rotateY(0deg) translateZ(calc(-1 * var(--room-size))); }
+#wall-front { transform: translateZ(calc(-1 * var(--room-size))); }
 #wall-right  { transform: rotateY(90deg) translateZ(calc(-1 * var(--room-size))); }
 #wall-back   { transform: rotateY(180deg) translateZ(calc(-1 * var(--room-size))); }
 #wall-left   { transform: rotateY(-90deg) translateZ(calc(-1 * var(--room-size))); }
