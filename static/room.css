@@ -32,6 +32,17 @@ body {
     pointer-events: none;
 }
 
+#click-zone {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vmin;
+    height: 100vmin;
+    cursor: pointer;
+    pointer-events: all;
+}
+
 .wall {
     position: absolute;
     width: 100vmin;
@@ -42,12 +53,8 @@ body {
     background-image: url('/static/concrete.jpg');
     background-size: cover;
     transform-style: preserve-3d;
-    pointer-events: none;
     backface-visibility: visible;
-}
-
-.wall.active {
-    pointer-events: all;
+    pointer-events: none;
 }
 
 #wall-front { transform: translateZ(calc(-1 * var(--room-size))); }

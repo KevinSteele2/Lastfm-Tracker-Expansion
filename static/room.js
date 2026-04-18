@@ -1,4 +1,11 @@
 const wallOrder = ['front', 'right', 'back', 'left'];
+const wallLinks = {
+    'front': '/lastfm',
+    'right': 'https://kale-terrier-sk3x.squarespace.com/',
+    'back': null,
+    'left': null
+};
+
 let current = 0;
 let rotation = 0;
 
@@ -11,3 +18,8 @@ function turn(direction) {
 }
 
 document.getElementById('wall-front').classList.add('active');
+
+document.getElementById('click-zone').addEventListener('click', function() {
+    const link = wallLinks[wallOrder[current]];
+    if (link) window.location.href = link;
+});
