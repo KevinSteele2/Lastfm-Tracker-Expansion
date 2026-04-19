@@ -135,7 +135,7 @@ button.turn-btn {
     background: none;
     border: none;
     color: white;
-    font-size: 32px;
+    font-size: 56px;
     cursor: pointer;
     pointer-events: all;
     text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
