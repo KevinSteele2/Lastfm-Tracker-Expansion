@@ -50,11 +50,33 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: url('/static/concrete.jpg');
-    background-size: cover;
     transform-style: preserve-3d;
     backface-visibility: visible;
     pointer-events: none;
+}
+
+#wall-front { 
+    transform: translateZ(calc(-1 * var(--room-size)));
+    background-image: url('/static/concrete_with_door.jpg');
+    background-size: cover;
+}
+
+#wall-right  { 
+    transform: rotateY(90deg) translateZ(calc(-1 * var(--room-size)));
+    background-image: url('/static/concrete_with_door.jpg');
+    background-size: cover;
+}
+
+#wall-back   { 
+    transform: rotateY(180deg) translateZ(calc(-1 * var(--room-size)));
+    background-image: url('/static/concrete_with_door.jpg');
+    background-size: cover;
+}
+
+#wall-left   { 
+    transform: rotateY(-90deg) translateZ(calc(-1 * var(--room-size)));
+    background-image: url('/static/aboutme.jpg');
+    background-size: cover;
 }
 
 #wall-front { transform: translateZ(calc(-1 * var(--room-size))); }
@@ -71,6 +93,7 @@ body {
     display: block;
     position: relative;
     cursor: pointer;
+    margin-bottom: 30%;
 }
 
 .door:hover {
