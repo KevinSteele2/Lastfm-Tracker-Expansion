@@ -1,7 +1,7 @@
 const wallOrder = ['front', 'right', 'back', 'left'];
 const wallLinks = {
     'front': '/lastfm',
-    'right': 'https://kale-terrier-sk3x.squarespace.com/',
+    'right': '/about',
     'back': null,
     'left': null
 };

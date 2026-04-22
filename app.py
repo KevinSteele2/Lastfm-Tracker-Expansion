@@ -10,6 +10,18 @@ app = Flask(__name__)
 def index():
     return render_template('room.html')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/sq3r')
+def sq3r():
+    return render_template('sq3r.html')
+
+@app.route('/spotify')
+def spotify():
+    return render_template('spotify.html')
+
 @app.route('/lastfm')
 def lastfm():
     return render_template('lastfm.html')
