@@ -64,7 +64,8 @@ h2 {
     font-family: 'Playfair Display', serif;
     font-size: 28px;
     font-weight: 400;
-    margin-bottom: 24px;
+    margin-bottom: 12px;
+    margin-top: 12px;
 }
 
 h3 {
@@ -98,19 +99,22 @@ ul {
 ul li {
     color: #444;
     padding: 8px 0;
-    border-bottom: 1px solid var(--border);
+    border-bottom: none;
     font-size: 15px;
 }
 
-ul li:first-child {
-    border-top: 1px solid var(--border);
+ul li::after {
+    content: '';
+    display: block;
+    width: 40%;
+    margin: 8px auto 0;
+    border-bottom: 1px solid var(--border);
 }
 
 section {
     padding: 80px 40px;
     max-width: var(--max-width);
     margin: 0 auto;
-    border-bottom: 1px solid var(--border);
 }
 
 .hero {
