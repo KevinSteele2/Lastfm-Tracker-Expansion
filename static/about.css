@@ -209,3 +209,9 @@ footer {
     margin-top: 40px;
     margin-bottom: 8px;
 }
+
+.back-btn {
+    display: block;
+    text-align: left;
+    margin-left: 10px;
+}
