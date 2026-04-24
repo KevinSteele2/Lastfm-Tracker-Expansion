@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, render_template, request
 import os
+import time
 import sys
 sys.path.append('.')
 from main import get_all_scrobbles, group_by_album, album_play_counts, load_cache, save_cache, fetch_missing_albums
@@ -33,9 +34,9 @@ def get_albums():
     if not username:
         return jsonify({"error": "Invalid Username"}), 400
     
-    if username not in scrobble_cache:
-        scrobble_cache[username] = get_all_scrobbles(username)
-    tracks = scrobble_cache[username]
+    if username not in scrobble_cache or time.time() - scrobble_cache[username]['time'] > 3600:
+        scrobble_cache[username] = {'tracks': get_all_scrobbles(username), 'time': time.time()}
+    tracks = scrobble_cache[username]['tracks']
     albums = group_by_album(tracks)
     cache = load_cache(username)
     fetch_missing_albums(albums, cache)
