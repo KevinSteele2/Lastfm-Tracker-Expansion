@@ -30,7 +30,7 @@ def spotify():
 def lastfm():
     return render_template('lastfm.html')
 
-@app.route('/dogbreed')
+@app.route('/dogguesser')
 def dogbreed_page():
     return render_template('dogbreed.html')
 

@@ -1,9 +1,9 @@
-const wallOrder = ['front', 'right', 'back', 'left'];
+const wallOrder = ['front', 'left', 'back', 'right'];
 const wallLinks = {
     'front': '/lastfm',
-    'right': '/about',
+    'right': '/dogguesser',
     'back': null,
-    'left': '/dogbreed'
+    'left': '/about'
 };
 
 let current = 0;
