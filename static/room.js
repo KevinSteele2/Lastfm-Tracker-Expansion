@@ -3,7 +3,7 @@ const wallLinks = {
     'front': '/lastfm',
     'right': '/about',
     'back': null,
-    'left': null
+    'left': '/dogbreed'
 };
 
 let current = 0;

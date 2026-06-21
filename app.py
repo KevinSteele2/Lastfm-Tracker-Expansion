@@ -4,6 +4,8 @@ import time
 import sys
 sys.path.append('.')
 from main import get_all_scrobbles, group_by_album, album_play_counts, load_cache, save_cache, fetch_missing_albums
+import dogbreed
+import random
 
 app = Flask(__name__)
 scrobble_cache = {}
@@ -27,6 +29,10 @@ def spotify():
 @app.route('/lastfm')
 def lastfm():
     return render_template('lastfm.html')
+
+@app.route('/dogbreed')
+def dogbreed_page():
+    return render_template('dogbreed.html')
 
 @app.route('/api/albums')
 def get_albums():
@@ -58,6 +64,36 @@ def get_albums():
                 album_list[i], album_list[j] = album_list[j], album_list[i]
 
     return jsonify(album_list)
+
+@app.route('/api/dogbreed/random')
+def dogbreed_random():
+    breed = random.choice(dogbreed.COMMON_BREEDS)
+    info = dogbreed.get_breed_info(breed["title"])
+
+    if not info:
+        return jsonify({"error": "Could not fetch a dog image, try again"}), 500
+
+    return jsonify({
+        "breed_id": breed["title"],
+        "image_url": info["image_url"]
+    })
+
+@app.route('/api/dogbreed/guess', methods=['POST'])
+def dogbreed_guess():
+    data = request.get_json()
+    if not data or 'breed_id' not in data or 'guess' not in data:
+        return jsonify({"error": "Request must include breed_id and guess"}), 400
+
+    breed_id = data['breed_id']
+    guess = data['guess']
+
+    cache = dogbreed.load_cache()
+    correct, answer = dogbreed.check_guess(breed_id, guess, cache)
+
+    if answer is None:
+        return jsonify({"error": "Unknown breed_id"}), 404
+
+    return jsonify({"correct": correct, "answer": answer})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
