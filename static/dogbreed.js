@@ -7,7 +7,7 @@ function loadNewDog() {
     document.getElementById('guess-input').value = '';
     document.getElementById('guess-input').style.display = 'inline';
     document.querySelector('#guess-area button').style.display = 'inline';
-    document.getElementById('next-button').style.display = 'none';
+    
     document.getElementById('dog-image').src = '';
  
     fetch('/api/dogbreed/random')
@@ -20,6 +20,7 @@ function loadNewDog() {
             currentBreedId = data.breed_id;
             currentAliases = data.aliases || [];
             document.getElementById('dog-image').src = data.image_url;
+            document.getElementById('guess-input').focus();
         });
 }
  
@@ -50,9 +51,15 @@ function submitGuess() {
  
             document.getElementById('guess-input').style.display = 'none';
             document.querySelector('#guess-area button').style.display = 'none';
-            document.getElementById('next-button').style.display = 'inline';
+            setTimeout(loadNewDog, 2000)
         });
 }
- 
+
+document.getElementById('guess-input').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        submitGuess();
+    }
+});
+
 // Load the first dog when the page opens
 loadNewDog();

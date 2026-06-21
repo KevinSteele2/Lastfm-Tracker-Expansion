@@ -1,0 +1,19 @@
+body {
+    font-family: sans-serif;
+    text-align: center;
+}
+
+h1 {
+    font-family: Georgia, "Linux Libertine", "Times New Roman", serif;
+    font-weight: normal;
+    border-bottom: 1px solid #a2a9b1;
+    padding-bottom: 8px;
+}
+ 
+#dog-image-container,
+#guess-area,
+#result-message,
+#next-button {
+    margin: 16px auto;
+}
+ 
