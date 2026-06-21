@@ -75,7 +75,8 @@ def dogbreed_random():
 
     return jsonify({
         "breed_id": breed["title"],
-        "image_url": info["image_url"]
+        "image_url": info["image_url"],
+        "aliases": breed["aliases"]
     })
 
 @app.route('/api/dogbreed/guess', methods=['POST'])
@@ -86,12 +87,9 @@ def dogbreed_guess():
 
     breed_id = data['breed_id']
     guess = data['guess']
+    aliases = data.get('aliases', [])
 
-    cache = dogbreed.load_cache()
-    correct, answer = dogbreed.check_guess(breed_id, guess, cache)
-
-    if answer is None:
-        return jsonify({"error": "Unknown breed_id"}), 404
+    correct, answer = dogbreed.check_guess(breed_id, guess, aliases)
 
     return jsonify({"correct": correct, "answer": answer})
 

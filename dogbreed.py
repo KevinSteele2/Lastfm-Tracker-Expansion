@@ -1,55 +1,52 @@
-import requests
- 
-WIKI_SUMMARY_URL = "https://en.wikipedia.org/api/rest_v1/page/summary/{title}"
- 
+import random
+from difflib import SequenceMatcher
 
-STARTER_BREEDS = [
-    "Labrador Retriever",
-    "German Shepherd",
-    "Golden Retriever",
-    "French Bulldog",
-    "Bulldog",
-    "Poodle",
-    "Beagle",
-    "Rottweiler",
-    "Dachshund",
-    "Siberian Husky",
-    "Shih Tzu",
-    "Boxer (dog)",       
-    "Great Dane",
-    "Chihuahua (dog breed)",  
-    "Pug",
-    "Border Collie",
-    "Australian Shepherd",
-    "Yorkshire Terrier",
-    "Doberman",
-    "Corgi",
+import requests
+
+WIKI_SUMMARY_URL = "https://en.wikipedia.org/api/rest_v1/page/summary/{title}"
+
+
+COMMON_BREEDS = [
+    {"title": "Labrador Retriever", "aliases": ["lab", "labrador"]},
+    {"title": "German Shepherd", "aliases": ["gsd", "german shepherd dog"]},
+    {"title": "Golden Retriever", "aliases": ["golden"]},
+    {"title": "French Bulldog", "aliases": ["frenchie"]},
+    {"title": "Bulldog", "aliases": ["english bulldog", "british bulldog"]},
+    {"title": "Poodle", "aliases": []},
+    {"title": "Beagle", "aliases": []},
+    {"title": "Rottweiler", "aliases": ["rottie"]},
+    {"title": "Dachshund", "aliases": ["wiener dog", "sausage dog", "doxie"]},
+    {"title": "Siberian Husky", "aliases": ["husky"]},
+    {"title": "Shih Tzu", "aliases": []},
+    {"title": "Boxer (dog)", "aliases": ["boxer"]},
+    {"title": "Great Dane", "aliases": []},
+    {"title": "Chihuahua (dog breed)", "aliases": ["chihuahua"]},
+    {"title": "Pug", "aliases": []},
+    {"title": "Border Collie", "aliases": []},
+    {"title": "Australian Shepherd", "aliases": ["aussie"]},
+    {"title": "Yorkshire Terrier", "aliases": ["yorkie"]},
+    {"title": "Dobermann", "aliases": ["doberman", "doberman pinscher"]},
+    {"title": "Pembroke Welsh Corgi", "aliases": ["corgi", "welsh corgi"]},
 ]
- 
- 
+
+
 def get_breed_info(wiki_title):
-    """
-    Fetch a single breed's summary from Wikipedia.
- 
-    Returns a dict: {name, image_url, extract, page_url}
-    or None if the page has no usable thumbnail.
-    """
     url = WIKI_SUMMARY_URL.format(title=wiki_title.replace(" ", "_"))
     response = requests.get(url, headers={"User-Agent": "DogBreedGame/0.1"})
- 
+
     if response.status_code != 200:
         print(f"  [skip] {wiki_title}: HTTP {response.status_code}")
         return None
- 
+
     data = response.json()
- 
+
     thumbnail = data.get("thumbnail", {})
     image_url = thumbnail.get("source")
- 
+
     if not image_url:
         print(f"  [skip] {wiki_title}: no thumbnail image")
         return None
- 
+
     return {
         "name": data.get("title"),
         "image_url": image_url,
@@ -58,19 +55,20 @@ def get_breed_info(wiki_title):
         "extract": data.get("extract"),
         "page_url": data.get("content_urls", {}).get("desktop", {}).get("page"),
     }
- 
- 
-def test_starter_breeds():
-    results = []
-    for breed in STARTER_BREEDS:
-        info = get_breed_info(breed)
-        if info:
-            results.append(info)
-            print(f"  [ok]   {info['name']} -> {info['image_url']}")
-    return results
- 
- 
-if __name__ == "__main__":
-    print(f"Testing {len(STARTER_BREEDS)} breeds against Wikipedia REST API...\n")
-    results = test_starter_breeds()
-    print(f"\n{len(results)}/{len(STARTER_BREEDS)} breeds returned a usable image.")
+
+
+def _normalize(text):
+    return text.lower().strip().replace("-", " ")
+
+
+def check_guess(breed_id, guess, aliases=None, threshold=0.82):
+    aliases = aliases or []
+    candidates = [breed_id] + aliases
+    guess_norm = _normalize(guess)
+
+    for candidate in candidates:
+        score = SequenceMatcher(None, guess_norm, _normalize(candidate)).ratio()
+        if score >= threshold:
+            return True, breed_id
+
+    return False, breed_id
