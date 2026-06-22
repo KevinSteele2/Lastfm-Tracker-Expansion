@@ -67,14 +67,16 @@ def get_albums():
 
 @app.route('/api/dogbreed/random')
 def dogbreed_random():
-    breed = random.choice(dogbreed.COMMON_BREEDS)
-    info = dogbreed.get_breed_info(breed["title"])
+    cache = dogbreed.load_cache()
+    if not cache:
+        return jsonify({"error": "Cache is empty. Run dogbreed.py first to build it."}), 500
 
-    if not info:
-        return jsonify({"error": "Could not fetch a dog image, try again"}), 500
+    title = random.choice(list(cache.keys()))
+    info = cache[title]
+    breed = next(b for b in dogbreed.COMMON_BREEDS if b["title"] == title)
 
     return jsonify({
-        "breed_id": breed["title"],
+        "breed_id": title,
         "image_url": info["image_url"],
         "aliases": breed["aliases"]
     })

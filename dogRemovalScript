@@ -1,0 +1,16 @@
+import json
+
+with open("dogbreed_cache.json", "r") as f:
+    cache = json.load(f)
+
+breeds_to_remove = ["Border Collie", "Bearded Collie"]
+
+for title in breeds_to_remove:
+    if title in cache:
+        del cache[title]
+        print(f"Removed: {title}")
+    else:
+        print(f"Not found (already gone?): {title}")
+
+with open("dogbreed_cache.json", "w") as f:
+    json.dump(cache, f, indent=2)

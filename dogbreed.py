@@ -2,8 +2,12 @@ import random
 from difflib import SequenceMatcher
 
 import requests
+import json
+import os
 
 WIKI_SUMMARY_URL = "https://en.wikipedia.org/api/rest_v1/page/summary/{title}"
+
+CACHE_PATH = "dogbreed_cache.json"
 
 
 COMMON_BREEDS = [
@@ -22,18 +26,15 @@ COMMON_BREEDS = [
     {"title": "Great Dane", "aliases": []},
     {"title": "Chihuahua (dog breed)", "aliases": ["chihuahua"]},
     {"title": "Pug", "aliases": []},
-    {"title": "Border Collie", "aliases": []},
     {"title": "Australian Shepherd", "aliases": ["aussie"]},
     {"title": "Yorkshire Terrier", "aliases": ["yorkie"]},
     {"title": "Dobermann", "aliases": ["doberman", "doberman pinscher"]},
     {"title": "Pembroke Welsh Corgi", "aliases": ["corgi", "welsh corgi"]},
-    {"title": "Akita (dog)", "aliases": ["akita"]},
     {"title": "Alaskan Malamute", "aliases": ["malamute"]},
     {"title": "American Bulldog", "aliases": []},
     {"title": "American Staffordshire Terrier", "aliases": ["amstaff"]},
     {"title": "Basenji", "aliases": []},
     {"title": "Basset Hound", "aliases": []},
-    {"title": "Bearded Collie", "aliases": []},
     {"title": "Belgian Malinois", "aliases": ["malinois"]},
     {"title": "Bernese Mountain Dog", "aliases": ["berner"]},
     {"title": "Bichon Frise", "aliases": ["bichon"]},
@@ -140,18 +141,39 @@ def check_guess(breed_id, guess, aliases=None, threshold=0.82):
 
     return False, breed_id
 
+def load_cache():
+    if not os.path.exists(CACHE_PATH):
+        return {}
+    with open(CACHE_PATH, "r") as f:
+        return json.load(f)
+
+def save_cache(cache):
+    with open(CACHE_PATH, "w") as f:
+        json.dump(cache, f)
+
 if __name__ == "__main__":
     import time
 
+    cache = load_cache()
     failed = []
+
     for breed in COMMON_BREEDS:
-        info = get_breed_info(breed["title"])
-        if not info:
-            failed.append(breed["title"])
+        title = breed["title"]
+        if title in cache:
+            continue  # already cached, skip re-fetching
+
+        info = get_breed_info(title)
+        if info:
+            cache[title] = info
+            print(f"  [cached] {title}")
+        else:
+            failed.append(title)
         time.sleep(1.0)
 
-    print(f"\n{len(COMMON_BREEDS) - len(failed)}/{len(COMMON_BREEDS)} breeds OK\n")
+    save_cache(cache)
+
+    print(f"\n{len(cache)}/{len(COMMON_BREEDS)} breeds cached")
     if failed:
-        print("These failed and should be removed from COMMON_BREEDS:")
+        print("These failed:")
         for title in failed:
             print(f"  - {title}")

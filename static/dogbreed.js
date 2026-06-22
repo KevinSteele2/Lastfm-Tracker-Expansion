@@ -7,8 +7,6 @@ function loadNewDog() {
     document.getElementById('guess-input').value = '';
     document.getElementById('guess-input').style.display = 'inline';
     document.querySelector('#guess-area button').style.display = 'inline';
-    
-    document.getElementById('dog-image').src = '';
  
     fetch('/api/dogbreed/random')
         .then(response => response.json())
