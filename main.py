@@ -50,9 +50,8 @@ def test_recent_tracks():
 
 def get_all_scrobbles(username):
     url = "http://ws.audioscrobbler.com/2.0/"
-    all_tracks = []
-    page=1
-    while True:
+    
+    def fetch_page(page):
         params = {
             "method": "user.getrecenttracks",
             "user": username,
@@ -61,28 +60,36 @@ def get_all_scrobbles(username):
             "page": page,
             "format": "json"
         }
-
         response = requests.get(url, params=params)
         data = response.json()
 
         if "error" in data:
             print(f"API Error on page {page}: {data['error']}")
-            break
+            return [], data
 
         tracks = data.get("recenttracks", {}).get("track", [])
         if not isinstance(tracks, list):
             tracks = [tracks]
-        
-        tracks = [t for t in tracks if not t.get("@attr", {}).get("nowplaying")]
-        
-        all_tracks.extend(tracks)
 
-        total_pages = int(data.get("recenttracks", {}).get("@attr", {}).get("totalPages", 1))
-        print(f"Fetched page {page} of {total_pages}")
-        if page >= total_pages:
-            break
-        page += 1
-        time.sleep(.2)
+        return [t for t in tracks if not t.get("@attr", {}).get("nowplaying")], data
+    
+
+    first_tracks, first_data = fetch_page(1)
+    total_pages = int(first_data.get("recenttracks", {}).get("@attr", {}).get("totalPages", 1))
+    print(f"Fetched page 1 of {total_pages}")
+
+    all_tracks = list(first_tracks)
+    if total_pages <= 1:
+        return all_tracks
+
+    # concurrently fetching the rest of the pages, should be faster if the api doesn't stop me
+    remaining_pages = range(2, total_pages + 1)
+
+    with ThreadPoolExecutor(max_workers=15) as executor:
+        for page, (tracks, _) in zip(remaining_pages, executor.map(fetch_page, remaining_pages)):
+            all_tracks.extend(tracks)
+            print(f"Fetched page {page} of {total_pages}")
+
     return all_tracks
 
 def group_by_album(tracks):
