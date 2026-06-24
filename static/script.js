@@ -45,8 +45,8 @@ function loadAlbums(){
                 const label = document.createElement('p');
                 label.textContent = albumName + ' - ' + artist + ': ' + count + ' listens';
 
-                card.appendChild(img)
                 card.appendChild(label);
+                card.appendChild(img)
                 container.appendChild(card);
             }
         })
