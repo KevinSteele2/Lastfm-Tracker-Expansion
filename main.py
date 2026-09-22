@@ -180,7 +180,7 @@ def fetch_missing_albums(albums, cache):
         print(f"Fetched: {key}")
         return key, result
 
-    with ThreadPoolExecutor(max_workers=10) as executor:
+    with ThreadPoolExecutor(max_workers=16) as executor:
         for key, result in executor.map(fetch_one, missing):
             cache[key] = result
 
