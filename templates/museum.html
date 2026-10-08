@@ -35,6 +35,49 @@
   container-type: inline-size;
   }
 
+  .back {
+  position: fixed;
+  top: 20px;
+  left: 24px;
+  z-index: 10;
+  font: 28px/1 Georgia, serif;
+  color: rgba(255, 244, 225, 0.55);
+  text-decoration: none;
+  transition: color 0.2s, transform 0.2s;
+  }
+
+.back:hover {
+  color: rgba(255, 244, 225, 1);
+  transform: translateX(-4px);
+  }
+
+.mute {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  z-index: 10;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: rgba(255, 244, 225, 0.8);
+  transition: color 0.2s;
+}
+.mute:hover { color: rgba(255, 244, 225, 1); }
+
+.mute .cross { display: none; }
+.mute.is-muted .cross { display: inline; }
+.mute.is-muted .waves { display: none; }
+
+  .person {
+  position: absolute;
+  left: 30%;
+  bottom: -2%;
+  height: 70%;
+  transform: translateX(-50%);
+  mix-blend-mode: multiply;
+  }
+
   .layer {
     position: absolute;
     inset: 0;
@@ -87,13 +130,45 @@
   }
 </style>
 </head>
+
 <body>
+  <a href="/" class="back" aria-label="Back to the hub">&larr;</a>
+  <audio id="song" src="{{ url_for('static', filename='museum/song.mp3') }}"
+       autoplay muted loop></audio>
+
+<button id="mute" class="mute is-muted" aria-label="Unmute music">
+  <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="currentColor"
+       stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor" stroke="none"/>
+    <path class="waves" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/>
+    <path class="cross" d="M16 9l5 6M21 9l-5 6"/>
+  </svg>
+</button>
   <div class="stage">
     <div class="layer room"></div>
     <div class="layer spill"></div>
     <img class="painting" src="{{ url_for('static', filename='museum/painting.jpg') }}" alt="The exhibit">
-    <div class="layer people"></div>
+    <div class="layer people">
+      <video class="person" src="{{ url_for('static', filename='museum/robot.mp4') }}"
+         autoplay muted loop playsinline></video>
+    </div>
     <div class="layer vignette"></div>
   </div>
+
+  <script>
+  const song = document.getElementById("song");
+  const btn = document.getElementById("mute");
+
+  song.volume = 0.5;
+
+  btn.addEventListener("click", () => {
+    song.muted = !song.muted;
+    if (song.paused) song.play();
+
+    btn.classList.toggle("is-muted", song.muted);
+    btn.setAttribute("aria-label", song.muted ? "Unmute music" : "Mute music");
+  });
+</script>
+
 </body>
 </html>
