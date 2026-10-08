@@ -2,7 +2,7 @@ const wallOrder = ['front', 'left', 'back', 'right'];
 const wallLinks = {
     'front': '/lastfm',
     'right': '/dogguesser',
-    'back': null,
+    'back': '/museum',
     'left': '/about'
 };
 

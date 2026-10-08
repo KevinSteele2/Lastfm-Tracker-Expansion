@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exhibit Room</title>
+<style>
+  /*
+    Tweak these to fit your room photo.
+    Everything is a percentage of the photo, so it stays locked in place at any window size.
+  */
+  :root {
+  --room-ratio: 1200 / 889;      /* width / height of your room photo */
+  --paint-left: 51%;
+  --paint-top: 40%;
+  --paint-width: 44%;
+  --room-dim: 0.45;
+  }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+  }
+
+  /*
+    The stage is a box with the photo's exact aspect ratio, sized to cover the window
+    (the CSS equivalent of background-size: cover). Because every layer is positioned
+    in % of the stage, the painting can never drift off the wall when the window resizes.
+  */
+  .stage {
+  position: fixed;
+  inset: 0;
+  container-type: inline-size;
+  }
+
+  .layer {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Layer 1: the room, darkened so the painting becomes the light source */
+  .room {
+    background: url("{{ url_for('static', filename='museum/room.jpg') }}") center / 100% 100% no-repeat;
+    filter: brightness(var(--room-dim)) saturate(0.7);
+  }
+
+  /*
+    Layer 2: light spill. A soft radial glow centered on the painting.
+    mix-blend-mode: screen only ever brightens what's under it, so it reads
+    as light falling on the wall rather than a colored blob pasted on top.
+  */
+  .spill {
+    background: radial-gradient(
+      ellipse 40% 45% at var(--paint-left) var(--paint-top),
+      rgba(255, 244, 225, 0.55),
+      rgba(255, 244, 225, 0.15) 45%,
+      transparent 75%
+    );
+    mix-blend-mode: screen;
+  }
+
+  /* Layer 3: your image, at full brightness, with a glow around its edges */
+  .painting {
+    position: absolute;
+    left: var(--paint-left);
+    top: var(--paint-top);
+    width: var(--paint-width);
+    transform: translate(-50%, -50%);
+    display: block;
+    border: 0.6cqw solid #1b1712;   /* simple dark frame; remove if the photo has one */
+    box-shadow:
+      0 0 3cqw 0.5cqw rgba(255, 240, 215, 0.35),
+      0 0 8cqw 2cqw rgba(255, 240, 215, 0.15);
+  }
+
+  /* Layer 4: people go here later. It sits above the painting, so they occlude it. */
+  .people {
+    pointer-events: none;
+  }
+
+  /* Layer 5: vignette, darkening the edges to pull the eye to the center */
+  .vignette {
+    background: radial-gradient(ellipse at 50% 45%, transparent 45%, rgba(0, 0, 0, 0.75) 100%);
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div class="layer room"></div>
+    <div class="layer spill"></div>
+    <img class="painting" src="{{ url_for('static', filename='museum/painting.jpg') }}" alt="The exhibit">
+    <div class="layer people"></div>
+    <div class="layer vignette"></div>
+  </div>
+</body>
+</html>

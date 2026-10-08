@@ -34,6 +34,10 @@ def lastfm():
 def dogbreed_page():
     return render_template('dogbreed.html')
 
+@app.route("/museum")
+def museum():
+    return render_template("museum.html")
+
 @app.route('/api/albums')
 def get_albums():
     username = request.args.get('username')
